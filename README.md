@@ -112,7 +112,7 @@ ConsoleModule.h
 I can now use this module in MyProgram:
 
 ```c
-#pragma source "ConsoleModule.h"  
+#include "ConsoleModule.h"  
 int main()
 {
 }
@@ -121,6 +121,32 @@ int main()
 ```
 ccompiler --DWIN32 MyProgram.c
 ```
+
+Imagine module descriptions for all existing libraries: openssl, libtiff, zlib, libjpeg..
+Then if you want to use some of these libraries in your project you can just copy a folder and include some file.
+
+We also can make the entire MyProgram a module in a way that the original source files don´t need the pragma source.
+
+MyProgram.c
+```c
+#include "Console.h"  
+int main()
+{
+}
+```
+
+MyProgramModule.c
+```
+#include "ConsoleModule.h"
+#pragma source "MyProgram.c"
+```
+
+```
+ccompiler --DWIN32 MyProgramModule.c
+```
+
+
+
 ## Other pragmas
 
 The idea is give information about libraries and include dir.
