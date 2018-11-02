@@ -21,7 +21,7 @@ A module is a **preprocessing translation unit** itself or a **preprocessing tra
 
 ## How to group preprocessing translation unit?
 
-The sugestion is to use #pragma source.
+The sugestion is to use **#pragma source**.
 
 Let's say I want to create a module for console functions. 
 Other projects can use this module.
@@ -113,6 +113,17 @@ int main()
 
 ```
 ccompiler --DWIN32 MyProgram.c
+```
+## Other pragmas
+
+The idea is give information about libraries and include dir.
+
+```
+#pragma includedir ""
+
+#pragma library ""
+//see #pragma comment(lib, "lib.lib") from Microsoft compiler
+
 ```
 
 ## References
