@@ -95,7 +95,7 @@ Console
   Include
      Console.h     
 ```
-Now we can create a new file:
+Now we can create a new file separately:
 
 ConsoleModule.h
 
