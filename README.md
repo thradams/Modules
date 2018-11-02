@@ -144,9 +144,15 @@ int main()
 ```
 
 MyProgramModule.c
-```
+```c
+
+/*
+  MyProgramModule.c
+*/
+
 #include "ConsoleModule.h"
 #pragma source "MyProgram.c"
+
 ```
 
 ```
