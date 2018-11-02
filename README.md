@@ -5,6 +5,8 @@ Besides c compiler implementation, externals tools could be created to generate 
 
 ## What is a module?
 
+From the C standard;
+
 ```
 5.1.1.1 Program structure
 1 A C program need not all be translated at the same time. The text of the program is kept
