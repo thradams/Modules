@@ -61,11 +61,13 @@ At Console.h we add **#pragma source**
 
 ```
 
-Now to use this:
-
-MyProgram.c
+To use this module **all we need to do is to include the Console.h**
 
 ```c
+/*
+  MyProgram.c
+*/
+
 #include "Console.h"
 
 int main()
@@ -78,8 +80,6 @@ To compile:
 ```
 ccompiler -DLINUX MyProgram.c
 ```
-
-Myprogram.c is a module group.
 
 
 ## Non intrusive
@@ -100,6 +100,10 @@ Now we can create a new file separately:
 ConsoleModule.h
 
 ```c
+/*
+   ConsoleModule.h
+*/
+
 #include "Console.h"
 
 #ifdef WIN32
@@ -112,6 +116,10 @@ ConsoleModule.h
 I can now use this module in MyProgram:
 
 ```c
+/*
+  MyProgram.c
+*/
+
 #include "ConsoleModule.h"  
 int main()
 {
