@@ -146,12 +146,15 @@ ccompiler --DWIN32 MyProgramModule.c
 ```
 
 
+## Implementation
+
+Basically at preprocessor phase we collect and merge the pragma sources considering their full paths. 
 
 ## Other pragmas
 
 The idea is give information about libraries and include dir.
 
-```
+```c
 #pragma includedir ""
 
 #pragma library ""
