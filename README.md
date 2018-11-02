@@ -165,6 +165,17 @@ ccompiler --DWIN32 MyProgramModule.c
 Basically at preprocessor phase we collect and merge the pragma sources considering their full paths. 
 Then this map is compiled in any order and some flags can mark the file as alredy compiled.
 
+## Automatic file deduction?
+
+If some c file has the same name of header at the same position should we consider that this file is the pragma source?
+
+```
+   File1.h
+   File.c
+```
+
+Then File1.h dont need to say pragma source "File1.c"
+Whould we search in other directories?
 
 ## Other pragmas
 
