@@ -20,11 +20,16 @@ linkage, manipulation of objects whose identifiers have external linkage, or man
 of data files. Translation units may be separately translated and then later linked to
 produce an executable program.
 ```
-A module is a **preprocessing translation unit** itself or a **preprocessing translation unit group** .
+The concept I want to add is module.
 
-## How to group preprocessing translation units?
+A module is a group of source codes related. For instance, the group of source code necessary to create one traditional library.
 
-The sugestion is to use **#pragma source**.
+A module has a root file, and we can find all other related files using this root.
+
+
+## How to create this root file and how files are related?
+
+The sugestion is to use **#pragma source** to create link beetween files.
 
 Let's say I want to create a module for console functions. 
 Other projects can use this module.
