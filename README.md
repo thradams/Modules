@@ -40,7 +40,8 @@ Console
 
 We want to especify that compiling for windows we need Console.h and ConsoleWin.c, for linux we need Console.h and ConsoleLinux.c  and UnitTest is not necessary.
 
-Console.h
+At Console.h we add #pragma source
+
 ```c
 
 #ifdef WIN32
@@ -72,6 +73,47 @@ ccompiler -DLINUX MyProgram.c
 ```
 
 Myprogram.c is a module group.
+
+
+## Non intrusive
+
+Let's say the module for console was created before the module concept.
+
+```
+Console
+  Src
+     ConsoleWin.c
+     ConsoleLinux.c
+     UnitTest.c
+  Include
+     Console.h     
+```
+Now we can create a new file:
+
+ConsoleModule.h
+
+```c
+#include "Console.h"
+
+#ifdef WIN32
+#pragma source ".\Console\Scr\ConsoleWin.c"
+#elif LINUX
+#pragma source ".\Console\Scr\ConsoleLinux.c"
+#endif
+```
+
+I can now use this module in MyProgram:
+
+```c
+#pragma module "ConsoleModule.h"  
+int main()
+{
+}
+```
+
+```
+ccompiler --DWIN32 MyProgram.c
+```
 
 ## References
 
