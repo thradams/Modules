@@ -163,6 +163,8 @@ ccompiler --DWIN32 MyProgramModule.c
 ## Implementation
 
 Basically at preprocessor phase we collect and merge the pragma sources considering their full paths. 
+Then this map is compiled in any order and some flags can mark the file as alredy compiled.
+
 
 ## Other pragmas
 
