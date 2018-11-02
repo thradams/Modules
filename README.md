@@ -22,7 +22,7 @@ produce an executable program.
 ```
 A module is a **preprocessing translation unit** itself or a **preprocessing translation unit group** .
 
-## How to group preprocessing translation unit?
+## How to group preprocessing translation units?
 
 The sugestion is to use **#pragma source**.
 
