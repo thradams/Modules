@@ -105,7 +105,7 @@ ConsoleModule.h
 I can now use this module in MyProgram:
 
 ```c
-#pragma module "ConsoleModule.h"  
+#pragma source "ConsoleModule.h"  
 int main()
 {
 }
