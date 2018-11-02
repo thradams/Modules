@@ -1,6 +1,7 @@
 # Modules
-Description for compiler implementation
+Description for c compiler implementation.
 
+Besides c compiler implementation, externals tools could be created to generate make files, visual studio solution, xcode solutions etc.. or existing tools could use the same representation as well as part of their configuration.
 
 ## What is a module?
 
