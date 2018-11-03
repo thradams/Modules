@@ -1,18 +1,16 @@
-# Modules
+# Pragma Source
 Description for c compiler implementation.
 
 Besides c compiler implementation, externals tools could be created to generate make files, visual studio solution, xcode solutions etc.. or existing tools could use the same representation as well as part of their configuration.
 
-## What is a module?
-A module is a set of files that can create a library. The module has an entry point that connects 
-all source files (.c) related. 
+## What is a Pragma Source?
 
-The sugestion is to use **#pragma source** to create link beetween files.
+Pragma source is a way to connect related source files. 
 
-Let's say I want to create a module for console functions. 
-Other projects can use this module.
+Let's say I want to create a library for console functions. 
+Other projects can use this library.
 
-My module has these files:
+I have these files:
 
 ```
 Console
@@ -44,7 +42,7 @@ At Console.h we add **#pragma source**
 
 ```
 
-To use this module **all we need to do is to include the Console.h**
+To use this library **all we need to do is to include the Console.h**
 
 ```c
 /*
@@ -67,7 +65,7 @@ ccompiler -DLINUX MyProgram.c
 
 ## Non intrusive
 
-Let's say the module for console was created before the module concept.
+Let's say the library for console was created before the pragma source concept.
 
 ```
 Console
@@ -84,7 +82,7 @@ ConsoleModule.h
 
 ```c
 /*
-   ConsoleModule.h
+   ConsoleLib.h
 */
 
 #include "Console.h"
@@ -96,14 +94,14 @@ ConsoleModule.h
 #endif
 ```
 
-I can now use this module in MyProgram:
+I can now use this library in MyProgram:
 
 ```c
 /*
   MyProgram.c
 */
 
-#include "ConsoleModule.h"  
+#include "ConsoleLib.h"  
 int main()
 {
 }
@@ -113,7 +111,7 @@ int main()
 ccompiler --DWIN32 MyProgram.c
 ```
 
-Imagine module descriptions for all existing libraries: openssl, libtiff, zlib, libjpeg..
+Imagine library non intrusive descriptions for all existing libraries: openssl, libtiff, zlib, libjpeg..
 Then if you want to use some of these libraries in your project you can just copy a folder and include some file.
 
 We also can make the entire MyProgram a module in a way that the original source files don´t need the pragma source.
@@ -133,7 +131,7 @@ MyProgramModule.c
   MyProgramModule.c
 */
 
-#include "ConsoleModule.h"
+#include "ConsoleLib.h"
 #pragma source "MyProgram.c"
 
 ```
