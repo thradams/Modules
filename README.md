@@ -5,7 +5,7 @@ Besides c compiler implementation, externals tools could be created to generate 
 
 ## What is a module?
 A module is a set of files that can create a library. The module has an entry point that connects 
-all files related. 
+all source files (.c) related. 
 
 The sugestion is to use **#pragma source** to create link beetween files.
 
