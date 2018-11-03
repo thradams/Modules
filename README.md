@@ -78,7 +78,7 @@ Console
 ```
 Now we can create a new file separately from the orignal distribuition:
 
-ConsoleModule.h
+ConsoleLib.h
 
 ```c
 /*
