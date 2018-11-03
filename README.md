@@ -4,30 +4,8 @@ Description for c compiler implementation.
 Besides c compiler implementation, externals tools could be created to generate make files, visual studio solution, xcode solutions etc.. or existing tools could use the same representation as well as part of their configuration.
 
 ## What is a module?
-
-From the C standard;
-
-```
-5.1.1.1 Program structure
-1 A C program need not all be translated at the same time. The text of the program is kept
-in units called source files, (or preprocessing files) in this International Standard. A
-source file together with all the headers and source files included via the preprocessing
-directive #include is known as a preprocessing translation unit. After preprocessing, a
-preprocessing translation unit is called a translation unit. Previously translated translation
-units may be preserved individually or in libraries. The separate translation units of a
-program communicate by (for example) calls to functions whose identifiers have external
-linkage, manipulation of objects whose identifiers have external linkage, or manipulation
-of data files. Translation units may be separately translated and then later linked to
-produce an executable program.
-```
-The concept I want to add is module.
-
-A module is a group of source codes related. For instance, the group of source code necessary to create one traditional library.
-
-A module has a root file, and we can find all other related files using this root.
-
-
-## How to create this root file and how files are related?
+A module is a set of files that can create a library. The module has an entry point that connects 
+all files related. 
 
 The sugestion is to use **#pragma source** to create link beetween files.
 
