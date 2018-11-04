@@ -183,6 +183,10 @@ The idea is give information about libraries and include dir.
 //see #pragma comment(lib, "lib.lib") from Microsoft compiler
 
 ```
+## pragma once span
+
+This pragma tell the compiler that this header will be expanded just once
+and the parsed result can be used in the other source files.
 
 ## References
 
