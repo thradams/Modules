@@ -158,6 +158,20 @@ If some c file has the same name of header at the same position should we consid
 Then File1.h dont need to say pragma source "File1.c"
 Whould we search in other directories?
 
+## Typing less
+
+Empty pragma source could say "the other file is the same name just the extension is .c "
+#pragma source
+```c
+
+/*
+file1.h
+*/
+
+#pragma source
+//means that file1.c is the pair 
+```
+
 ## Other pragmas
 
 The idea is give information about libraries and include dir.
