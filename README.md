@@ -5,7 +5,7 @@ Besides c compiler implementation, externals tools could be created to generate 
 
 ## What is a Pragma Source?
 
-Pragma source is a way to connect related source files. 
+Pragma source is a way to make source files discoverable respecting platform configuration. 
 
 Let's say I want to create a library for console functions. 
 Other projects can use this library.
