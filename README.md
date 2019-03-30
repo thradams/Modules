@@ -11,6 +11,6 @@ This allow compilers and other tools like lint finds the source code in a standa
 ## Struct member initializers
 [Struct Member initializer](memberinitialization.md)
 
-## Preprocessor with compiler integration new #if capabilities
+## C Preprocessor Upgrade
 
-[preprocessor updgrade](prepocessorupgrade.md)
+[Preprocessor updgrade](prepocessorupgrade.md)
