@@ -1,0 +1,3 @@
+# Struct member initializers
+
+
