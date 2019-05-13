@@ -23,3 +23,7 @@ With this feature can protect the code against external interference.
 #pragma STDC MACRO_ON
 
 ```
+
+Other preprocessor features are not affected and the expansion 
+at for instance #if HERE still allowed. 
+
