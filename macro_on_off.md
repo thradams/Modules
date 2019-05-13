@@ -17,12 +17,12 @@ With this feature can protect the code against external interference.
 
 ```c
 #define M 1
-#pragma STDC MACRO_OFF
+#pragma STDC MACRO OFF
 
   //the preprocessor will not expand any macro here...
   int M = 2;
   
-#pragma STDC MACRO_ON
+#pragma STDC MACRO ON
 
 ```
 
