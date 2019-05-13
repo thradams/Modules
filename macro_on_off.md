@@ -16,9 +16,11 @@ With this feature can protect the code against external interference.
 ## How to use?
 
 ```c
+#define M 1
 #pragma STDC MACRO_OFF
 
-  the preprocessor will not expand any macro here...
+  //the preprocessor will not expand any macro here...
+  int M = 2;
   
 #pragma STDC MACRO_ON
 
