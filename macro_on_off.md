@@ -17,13 +17,32 @@ With this feature can protect the code against external interference.
 
 ```c
 #define M 1
+
 #pragma STDC MACRO OFF
 
-  //the preprocessor will not expand any macro here...
+int main()
+{
   int M = 2;
   
+  #ifdef M   
+   //... 
+   int N;
+  #else
+   //...
+  #endif
+}
+
 #pragma STDC MACRO ON
 
+```
+Result:
+```c
+int main()
+{
+  int M = 2;
+
+  int N;
+}
 ```
 
 Other preprocessor features are not affected and the expansion 
