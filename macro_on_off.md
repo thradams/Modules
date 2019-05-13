@@ -1,4 +1,4 @@
-# Proposal to add MACRO_ON / MACRO_OFF
+# Proposal to add pragma MACRO ON / OFF
 
 ## What is does?
 
