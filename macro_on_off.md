@@ -45,6 +45,26 @@ int main()
 }
 ```
 
-Other preprocessor features are not affected and the expansion 
-at for instance #if HERE still allowed. 
+Generally we want to return the previous state. So this could be the default syntax:
 
+
+```c
+#define M 1
+
+#pragma STDC MACRO PUSH OFF
+
+int main()
+{
+  int M = 2;
+  
+  #ifdef M   
+   //... 
+   int N;
+  #else
+   //...
+  #endif
+}
+
+#pragma STDC MACRO POP
+
+```
