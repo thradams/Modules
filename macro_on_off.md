@@ -10,7 +10,7 @@ Library implementers, especially in C++, uses identifiers names __LikeThis and o
 
 In windows we have a classic conflict with min/max from windows.h and min max from STL.
 
-We can protect the code against external interference.
+With this feature can protect the code against external interference.
 
 
 ## How to use?
