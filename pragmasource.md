@@ -192,4 +192,63 @@ and the parsed result can be used in the other source files.
 
 comp lang c
 
+Universal compiler options 
+https://groups.google.com/d/msg/comp.lang.c/s7HDYJBHAeQ/S7TjEpL3CgAJ 
 
+
+A modular build system for C 
+https://groups.google.com/d/msg/comp.lang.c/xCE7YeVNJso/CsfwiMs0AgAJ 
+
+
+## Emulating pragma source
+
+file1.h
+```c
+#pragma once 
+
+void F1(); 
+
+#ifdef EMULATE_SOURCE 
+#include "file1.c" 
+#endif 
+```
+
+file1.c 
+```c
+#include "file1.h" 
+#include "file2.h" 
+
+void F1() { 
+  F2(); 
+} 
+
+```
+file2.h 
+
+```c
+#pragma once 
+
+void F2(); 
+
+#ifdef EMULATE_SOURCE 
+#include "file2.c" 
+#endif 
+```
+
+main.c
+
+```c
+#include "file1.h" 
+int main() { 
+  F1(); 
+} 
+```
+
+### Limitations
+
+Static functions that that were working previously without conflict
+now can be duplicated generating an error. 
+
+The good point about these limitations is that we can generate 
+amalgamations using simple tools that just merge files but 
+they have the same restrictions about static functions. 
