@@ -6,10 +6,27 @@ Read about the C++ proposal here:
 http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2756.htm
 
 I consider the motivation for C is a little diferent and my sugestion is
-to allow only constant expression for initialization. (C++ allows everthing)
+to allow **only constant expression** for initialization. 
+
+C++ allows everthing see this sample in C++
+```cpp
+intTest on Compiler Explorer ! ret = 0;
+int main () {
+    struct {
+        int x = ++ret;
+    } x = {0};
+    return ret;
+}
+```
+See in https://cor3ntin.github.io/posts/auto_nsdmi/
+
+I think the member initializer should be used to define default values
+at compiler time together with the type.
 
 
-What I do today in C
+
+
+## What I do today in C
 
 ```c
 struct Y
