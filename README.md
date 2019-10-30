@@ -14,3 +14,7 @@ This allow compilers and other tools like lint finds the source code in a standa
 ## C Preprocessor Upgrade
 
 [Preprocessor updgrade](prepocessorupgrade.md)
+
+## User defined character constants
+
+[User defined character constants](userdefinedchars.md)
