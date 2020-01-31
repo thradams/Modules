@@ -56,7 +56,8 @@ void X_Destroy(struct X* p){}
 
 int main()
 {
-  defer(struct X x = {0}, X_Destroy(&x)) {      
+  defer(struct X x = {0}, X_Destroy(&x))
+  {      
   }
 }
   
