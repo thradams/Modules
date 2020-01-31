@@ -21,7 +21,7 @@ Idiom
 
 Emulation with macros:
 
-````cpp
+```cpp
   #define __if(init, condition, defer) for(init, *ptemp=(void*)1; ptemp && (condition)  ; (defer), ptemp=0)
   
   __if(FILE* f = fopen("file.txt", "w"), f, fclose(f))
@@ -29,8 +29,7 @@ Emulation with macros:
     fprintf(f, "hi!");
   }
   
-'''
-
+```
 
 # defer
 
@@ -61,5 +60,6 @@ int main()
   }
 }
   
-'''
+```
+
 
