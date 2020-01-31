@@ -63,4 +63,11 @@ int main()
   
 ```
 
+# How about loop exit using return or break
+
+Should be defer expresion be called when we return or break inside the loop?
+Answer yes. Or we cannot call it defer.
+
+
+
 
