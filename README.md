@@ -18,3 +18,7 @@ This allow compilers and other tools like lint finds the source code in a standa
 ## User defined character constants
 
 [User defined character constants](userdefinedchars.md)
+
+## If with initializer and defer
+
+[If with initializer and defer](ifdefer.md)
