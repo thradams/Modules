@@ -1,9 +1,9 @@
 # if with initializer
 
-Just copy C++ version:
+Just put C++ 17 if with initializer inside C.
 
 
-# if with initializer and defer
+# if with initializer and defer 
 
 Add and extra expression that is executed at the end of true branch of if.
 
