@@ -118,6 +118,8 @@ int main()
 
 ### Overriding new
 
+In case you don't want to use malloc for instance
+
 ```cpp
 
 struct X
@@ -153,22 +155,21 @@ struct X
 
 int main()
 {
-  struct X* auto pX = new (struct X) {};
-  
-  destroy(pX);
-  
-  //Same of
-  
+  struct X* auto pX = new (struct X) {};  
+}
+
+same of at end of scope will call
   if (pX)
   {
     destroy(*pX); 
     free(pX);
   }  
-}
-
+  
 ```
 
 ### Overring destroy for auto pointers
+
+In case you don't want to use free. (malloc/free pair changed)
 
 ```cpp
 
@@ -179,41 +180,8 @@ struct X
 
 void operator destroy(struct X* auto p)
 {   
-   //...your code here
-   
-   default destroy(p);
+   //...your code here      
 }
-
-```
-
-The default destroy for auto pointer is the same of
-
-```cpp
-
-if (pX)
-{
-  destroy(*pX);
-  free(pX);
-}
-
-```
-
-## Automatically calling destroy for auto pointers
-
-Use the auto modifier in your pointer.
-
-```cpp
-
-struct X
-{
-    char * name = NULL;
-};
-
-int main()
-{
-  struct X* auto pX = new (struct X) {};
-   
-} //destroy(pX) is called at the end of scope
 
 ```
 
@@ -312,23 +280,19 @@ internal linkage only.
 
 ```cpp
 
-struct Box
-{
+struct Box {
     int id = 1;
 };
 
-void operator draw(struct Box* pBox)
-{
+void operator draw(struct Box* pBox) {
     printf("Box");
 }
 
-struct Circle
-{
+struct Circle {
     int id = 2;
 };
 
-void operator draw(struct Circle* pCircle)
-{
+void operator draw(struct Circle* pCircle) {
     printf("Circle");
 }
 
@@ -365,24 +329,21 @@ struct Box
     int id = 1; //discriminant
 };
 
-void operator draw(struct Box* pBox)
-{
+void operator draw(struct Box* pBox) {
     printf("Box");
 }
 
-struct Circle
-{
+struct Circle {
     int id = 2; //discriminant
 };
 
-void operator draw(struct Circle* pCircle)
-{
+void operator draw(struct Circle* pCircle) {
     printf("Circle");
 }
 
 int main()
 {
-  struct <Box | Circle>* auto shapes[2] = {};
+  auto struct <Box | Circle> * auto shapes[2] = {};
   
   shapes[0] = new (struct Box){};
   shapes[1] = new (struct Circle){};
