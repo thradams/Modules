@@ -90,7 +90,7 @@ int main() {
 
 ## Auto pointers
 
-Pointers can be qualified with auto.
+Pointers can be qualified with auto. Destroy will be called at the end of scope.
 
 ```cpp
 
@@ -128,6 +128,16 @@ void operator destroy(struct X * auto p)
     free(p);
   }
 }
+```
+
+To destroy the content of a non auto pointer we can cast.
+```
+int main()
+{
+  struct X* pX = malloc(sizeof * pX);
+  if (pX) *pX = (struct X){};
+  destroy( (struct X* auto) pX);
+} //destroy(pX)
 ```
 
 ## Operator new
