@@ -182,15 +182,11 @@ The default destroy for auto pointer is the same of
 
 ```cpp
 
-void default_destroy_of_struct_X(struct X* p)
+if (pX)
 {
-    if (pX)
-    {
-       destroy(*pX);
-       free(pX);
-    }
-};
-
+  destroy(*pX);
+  free(pX);
+}
 
 ```
 
