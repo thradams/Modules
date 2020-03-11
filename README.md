@@ -3,7 +3,6 @@
 Updated 11 march 2020
 
 When reading this document consider that the features are additions into C11 and not changes in C++.
-C++ features are not existent here by default (e.g references)
 
 ## Member initializer
 
@@ -22,13 +21,12 @@ struct X
 ```cpp
 int main()
 {
-   struct X x = {}; 
-   
+   struct X x = {};    
    //same as C99
-   struct x = { . i = 1, .pt = {.x = 1, .y = 1 } };
+   struct X x = { . i = 1, .pt = {.x = 1, .y = 1 } };
    
-   x = (struct X){}; 
    
+   x = (struct X){};    
    //same as C99
    x = (struct X){ . i = 1, .pt = {.x = 1, .y = 1 } };
 }
@@ -37,33 +35,22 @@ int main()
 int main()
 {
   struct X x; //same as C today (unitialized)
-  
-  int i = {};  //same as i = 0;
-  int* p = {};  //same as p = 0;
-  float f = {}; //same as f = 0.0f
-  //etc..
 }
 ```
 
 ## Operator destroy
 
-Does nothing for ints, structs etc..
-Can be overrided to do something.
+The compiler has a operator destroy that can be overrided.
 
 ```cpp
-
-struct Person
-{
+struct Person {
     char * name = NULL;
 };
 
 //overriding destroy
-void operator destroy(struct X* p)
+void operator destroy(struct X x)
 {
-  free(p->name);
-  
-  //calling the  default destroy   (does nothing in this case)
-  default destroy(p); 
+  free(x->name);
 }
 
 int main()
@@ -80,16 +67,55 @@ Destroy is not called automatically at the end of scope unless you put 'auto'.
 
 ```cpp
 
-struct Person
-{
+struct Person {
+    char * name = NULL;
+};
+
+int main() {
+   auto struct X x; 
+   
+} //destroy(x) is called
+
+```
+
+## Auto pointers
+
+Pointers can be qualified with auto.
+
+```cpp
+
+struct X {
     char * name = NULL;
 };
 
 int main()
 {
-   auto struct X x; 
-   
-} //destroy(x) is called at the end of scope
+  struct X* auto pX = new (struct X) {};  
+} //destroy(pX)
+
+```
+
+The compiler has a default implementation for any auto pointer that is equivalent of
+
+```cpp
+ if (p)
+ {
+   destroy(p);
+   free(p);
+ }
+```
+
+You can override destroy for auto pointers
+
+```cpp
+void operator destroy(struct X * auto p)
+{
+  if (p)
+  {
+    free(p->name);
+    free(p);
+  }
+}
 ```
 
 ## Operator new
@@ -142,29 +168,6 @@ int main()
   struct X* pX = new (struct X) {};
 }
 
-```
-
-## Auto pointers
-
-```cpp
-
-struct X
-{
-    char * name = NULL;
-};
-
-int main()
-{
-  struct X* auto pX = new (struct X) {};  
-}
-
-same of at end of scope will call
-  if (pX)
-  {
-    destroy(*pX); 
-    free(pX);
-  }  
-  
 ```
 
 ### Overring destroy for auto pointers
