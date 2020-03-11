@@ -2,6 +2,9 @@
 
 Updated 11 march 2020
 
+When reading this document consider that the features are additions into C11 and not changes in C++.
+C++ features are not existent here by default (e.g references)
+
 ## Member initializer
 
 ```cpp
@@ -34,6 +37,11 @@ int main()
 int main()
 {
   struct X x; //same as C today (unitialized)
+  
+  int i = {};  //same as i = 0;
+  int* p = {};  //same as p = 0;
+  float f = {}; //same as f = 0.0f
+  //etc..
 }
 ```
 
@@ -278,9 +286,25 @@ int main()
 } 
 
 ````
+# Operator move
 
-# Proposals for the C Language
-Repository with proposals for the C language
+```cpp
+ struct X * auto pX1 = new (struct X){};
+ struct X * auto pX2 = {};
+ 
+ pX2 = move(pX1);
+
+//Same as:
+pX2 = pX1;
+pX1 = NULL;
+
+```
+
+## Lambdas 
+Similar of C++.
+
+Lambdas without capture will be function pointers.
+Lambdas with capture (to be defined)
 
 
 ## Standard build system 
@@ -289,17 +313,6 @@ This allow compilers and other tools like lint finds the source code in a standa
  
 [Pragma source](pragmasource.md)
 
-## Struct member initializers
-[Struct Member initializer](memberinitialization.md)
 
-## C Preprocessor Upgrade
 
-[Preprocessor updgrade](prepocessorupgrade.md)
 
-## User defined character constants
-
-[User defined character constants](userdefinedchars.md)
-
-## If with initializer and defer
-
-[If with initializer and defer](ifdefer.md)
