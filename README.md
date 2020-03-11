@@ -21,23 +21,26 @@ int main()
 {
    struct X x = {}; 
    
-   //same as 
+   //same as C99
    struct x = { . i = 1, .pt = {.x = 1, .y = 1 } };
    
    x = (struct X){}; 
    
-   //same as 
+   //same as C99
    x = (struct X){ . i = 1, .pt = {.x = 1, .y = 1 } };
 }
 
 
 int main()
 {
-  struct X x; //unitialized like C is today
+  struct X x; //same as C today (unitialized)
 }
 ```
 
 ## Operator destroy
+
+Does nothing for ints, structs etc..
+Can be overrided to do something.
 
 ```cpp
 
@@ -62,6 +65,7 @@ int main()
    destroy(x);
 }
 ```
+
 ## Calling destroy at the end of scope
 
 Destroy is not called automatically at the end of scope unless you put 'auto'.
@@ -212,7 +216,7 @@ int main()
 ## Auto in struct members
 
 auto in struct members will generate the default destructor
-calling delete for pointers and destroy 
+calling destroy for each
 
 
 ```cpp
@@ -221,6 +225,7 @@ struct Y
 {
   int i;
 };
+
 struct X
 { 
   auto struct Y y;
@@ -229,12 +234,54 @@ struct X
 
 int main()
 {
-  struct X* auto pX = new (struct X) {};
-} //call destroy(pX);
+  auto struct X x = {};  
+} 
+calls destroy(x)
+that will call destroy(x.y) and destroy(x.pY) that will call destroy(*pX) and free(pX)
+
 
 ````
+## if with initializer 
+Same of C++.  See the use of auto.
 
+```cpp
 
+struct Y
+{
+  int i;
+};
+
+struct X
+{ 
+  auto struct Y y;
+  struct Y * auto pY;
+};
+
+int main()
+{
+  if (struct X* auto pX = new (struct X){}, p)
+  {
+  }//calls destroy(pX);
+} 
+
+````
+## overriding destroy for existing types
+
+```cpp
+
+void operator destroy (FILE * auto f)
+{
+  fclose(f);
+}
+
+int main()
+{
+  if (FILE* auto f = fopen("file.txt", "r"), f)
+  {
+  }//calls custon destroy(f) that calls fclose;
+} 
+
+````
 
 # Proposals for the C Language
 Repository with proposals for the C language
