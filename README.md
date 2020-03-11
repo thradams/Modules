@@ -17,20 +17,23 @@ struct X
 ```cpp
 int main()
 {
-   struct X x = {}; //same as { . i = 1, .pt = {.x = 1, .y = 1 } }
-   x = (struct X){}; //same as x = (struct X){ . i = 1, .pt = {.x = 1, .y = 1 } }
+   struct X x = {}; 
+   
+   //same as 
+   struct x = { . i = 1, .pt = {.x = 1, .y = 1 } };
+   
+   x = (struct X){}; 
+   
+   //same as 
+   x = (struct X){ . i = 1, .pt = {.x = 1, .y = 1 } };
 }
 
 
 int main()
 {
-  //this will be unitialized just like C is today
-  struct X x; 
+  struct X x; //unitialized like C is today
 }
 ```
-
-C++ allows non constants in member initializers. I would prefer compile time constant only.
-
 
 ## Operator destroy
 
@@ -46,7 +49,7 @@ void operator destroy(struct X* p)
 {
   free(p->name);
   
-  //calling the  default destroy  
+  //calling the  default destroy   (does nothing in this case)
   default destroy(p); 
 }
 
@@ -67,16 +70,6 @@ struct Person
 {
     char * name = NULL;
 };
-
-//overriding destroy
-void operator destroy(struct X* p)
-{
-  free(p->name);
-  
-  //Just like init, destroy is defined for all types
-  //we can call the default version of destroy
-  default destroy(p); 
-}
 
 int main()
 {
@@ -117,7 +110,7 @@ struct X
     char * name = NULL;
 };
 
-struct X* operator create(struct X* def)
+struct X* operator new(struct X* def)
 {
   struct X* p = malloc(sizeof * p);
   if (p)
@@ -149,7 +142,7 @@ int main()
   
   delete pX;
   
-  //same of
+  //default delete is the same of
   
   if (pX)
   {
@@ -173,6 +166,7 @@ struct X
 void operator delete(struct X* p)
 {   
    //...your code here
+   
    default delete(p);
 }
 
@@ -197,24 +191,37 @@ int main()
 
 ```
 
-auto in struct members
+## Auto in struct members
+
+auto in struct members will generate the default destructor
+calling delete for pointers.
+
+
 
 ```cpp
 
-struct X
+struct Y
 {
-    char * auto name = NULL;
+  int i;
+};
+struct X
+{ 
+  auto struct Y y;
+  struct Y * auto pY;
 };
 
 int main()
 {
   struct X* auto pX = new (struct X) {};
-   
 } 
-//delete pX is called at the end of scope
-//delete will call the default destroy
-//default destroy will call free in char*.
-```
+
+if (pX) {
+ destroy(pX->y); //is called
+ delete(pX->pY); //is called
+ free(pX)
+}
+
+````
 
 
 
