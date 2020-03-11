@@ -306,6 +306,100 @@ Similar of C++.
 Lambdas without capture will be function pointers.
 Lambdas with capture (to be defined)
 
+## Custom operator
+We can create other operators they are like funcions that can be overrided. But they have
+internal linkage only.
+
+```cpp
+
+struct Box
+{
+    int id = 1;
+};
+
+void operator draw(struct Box* pBox)
+{
+    printf("Box");
+}
+
+struct Circle
+{
+    int id = 2;
+};
+
+void operator draw(struct Circle* pCircle)
+{
+    printf("Circle");
+}
+
+int main()
+{
+  struct Box box = {};
+  struct Circle circle = {};
+  
+  draw(&box);
+  draw(&cicle);
+}
+
+```
+
+
+## Polimorphism
+
+Pointers that can point to a set of types. Types must have a common discriminant
+
+Sample:
+```cpp
+ 
+ //forward declaration
+ struct <struct Box | struct Circle> Shape;  
+ 
+  //pShape points to box or circle
+ struct Shape* pShape;
+```
+
+```cpp
+
+struct Box
+{
+    int id = 1; //discriminant
+};
+
+void operator draw(struct Box* pBox)
+{
+    printf("Box");
+}
+
+struct Circle
+{
+    int id = 2; //discriminant
+};
+
+void operator draw(struct Circle* pCircle)
+{
+    printf("Circle");
+}
+
+int main()
+{
+  struct <Box | Circle>* auto shapes[2] = {};
+  
+  shapes[0] = new (struct Box){};
+  shapes[1] = new (struct Circle){};
+  
+  for (int i = 0; i < 2; i++)
+  {    
+    //runtime selecion according with the discriminant
+    draw(shapes[i]); //draw bust be an operator in box and circle othewise compile time error
+    
+    //id is the only data member
+    printf("%d", shapes[i].id);
+  }
+  
+}
+
+```
+
 
 ## Standard build system 
 Pragma source is a way to make source files discoverable respecting platform configuration.
