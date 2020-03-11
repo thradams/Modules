@@ -73,7 +73,6 @@ struct Person
 
 int main()
 {
-   //auto makes destroy to be called at the end of scope
    auto struct X x; 
    
 } //destroy(x) is called at the end of scope
@@ -93,13 +92,15 @@ int main()
   struct X* pX = new (struct X){ }; 
   
   //Same as:
-  //struct X* pX = malloc(sizeof  * pX);
-  //if (pX) *pX = (struct X){};
   
+  struct X* pX = malloc(sizeof  * pX);
+  if (pX) 
+  {
+    *pX = (struct X){};
+  }  
 }
 
 ```
-
 
 ### Overriding new
 
@@ -122,12 +123,12 @@ struct X* operator new(struct X* def)
 
 int main()
 {
-  struct X* pX = new (struct X) {};  //same of create(&(struct X){});
+  struct X* pX = new (struct X) {};
 }
 
 ```
 
-## Operator delete
+## Auto pointers
 
 ```cpp
 
@@ -138,23 +139,22 @@ struct X
 
 int main()
 {
-  struct X* pX = new (struct X) {};
+  struct X* auto pX = new (struct X) {};
   
-  delete pX;
+  destroy(pX);
   
-  //default delete is the same of
+  //Same of
   
   if (pX)
   {
     destroy(*pX); 
     free(pX);
-  }
-  
+  }  
 }
 
 ```
 
-### Overring delete
+### Overring destroy for auto pointers
 
 ```cpp
 
@@ -163,16 +163,32 @@ struct X
     char * name = NULL;
 };
 
-void operator delete(struct X* p)
+void operator destroy(struct X* auto p)
 {   
    //...your code here
    
-   default delete(p);
+   default destroy(p);
 }
 
 ```
 
-## Automatically calling delete
+The default destroy for auto pointer is the same of
+
+```cpp
+
+void default_destroy_of_struct_X(struct X* p)
+{
+    if (pX)
+    {
+       destroy(*pX);
+       free(pX);
+    }
+};
+
+
+```
+
+## Automatically calling destroy for auto pointers
 
 Use the auto modifier in your pointer.
 
@@ -187,15 +203,14 @@ int main()
 {
   struct X* auto pX = new (struct X) {};
    
-} //delete pX is called at the end of scope
+} //destroy(pX) is called at the end of scope
 
 ```
 
 ## Auto in struct members
 
 auto in struct members will generate the default destructor
-calling delete for pointers.
-
+calling delete for pointers and destroy 
 
 
 ```cpp
@@ -213,13 +228,7 @@ struct X
 int main()
 {
   struct X* auto pX = new (struct X) {};
-} 
-
-if (pX) {
- destroy(pX->y); //is called
- delete(pX->pY); //is called
- free(pX)
-}
+} //call destroy(pX);
 
 ````
 
