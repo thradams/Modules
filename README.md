@@ -47,14 +47,13 @@ struct Person {
     char * name = NULL;
 };
 
-//overriding destroy for a variable of type struct X
-void operator destroy(struct X auto x)
-{
+//overriding destroy for a variable of type struct X auto
+void operator destroy(struct X auto x) {
   free(x->name);
 }
 
-int main()
-{
+int main() {
+
    struct X x;
    //...
    destroy(x);
@@ -133,10 +132,11 @@ void operator destroy(struct X * auto p)
 
 ## Operator new
 
+Allocates and copy a compound literal to the allocated memory.
+
 ```cpp
 
-struct X
-{
+struct X {
     char * name = NULL;
 };
 
@@ -161,8 +161,7 @@ In case you don't want to use malloc for instance
 
 ```cpp
 
-struct X
-{
+struct X {
     char * name = NULL;
 };
 
@@ -176,36 +175,16 @@ struct X* operator new(struct X* def)
   return p;
 }
 
-int main()
-{
+int main() {
   struct X* pX = new (struct X) {};
 }
 
 ```
-
-### Overring destroy for auto pointers
-
-In case you don't want to use free. (malloc/free pair changed)
-
-```cpp
-
-struct X
-{
-    char * name = NULL;
-};
-
-void operator destroy(struct X* auto p)
-{   
-   //...your code here      
-}
-
-```
+In case you have overried new then you probably will override destroy for pointers.
 
 ## Auto in struct members
 
-auto in struct members will generate the default destructor
-calling destroy for each
-
+The default implementation of destroy calls each destroy member recursivally.
 
 ```cpp
 
@@ -216,12 +195,11 @@ struct Y
 
 struct X
 { 
-  auto struct Y y;
+  struct Y y;
   struct Y * auto pY;
 };
 
-int main()
-{
+int main() {
   auto struct X x = {};  
 } 
 calls destroy(x)
@@ -241,7 +219,7 @@ struct Y
 
 struct X
 { 
-  auto struct Y y;
+  struct Y y;
   struct Y * auto pY;
 };
 
@@ -278,10 +256,21 @@ int main()
  
  pX2 = move(pX1);
 
-//Same as:
-pX2 = pX1;
-pX1 = NULL;
+ //Same as:
+ pX2 = pX1;
+ pX1 = NULL;
 
+```
+# Operator swap (a, b)
+
+Same as
+
+```cpp
+  
+  T t = a;
+  a = b;
+  b = t
+  
 ```
 
 ## Lambdas 
@@ -291,8 +280,9 @@ Lambdas without capture will be function pointers.
 Lambdas with capture (to be defined)
 
 ## Custom operator
+
 We can create other operators they are like funcions that can be overrided. But they have
-internal linkage only.
+internal linkage only. 
 
 ```cpp
 
