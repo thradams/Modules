@@ -31,50 +31,7 @@ int main()
 
 C++ allows non constants in member initializers. I would prefer compile time constant only.
 
-## Operator init
 
-```cpp
-int main()
-{
-   struct X x;
-   init(x); //same as :  x = (struct X){};
-   
-}
-
-```
-### Overriding init
-
-Custom init
-
-```cpp
-struct X
-{
-   int i = 1;
-   struct Point pt = { .x = 1, .y = 1 };
-};
-
-int init(struct X* p)
-{
-  //... your code
-}
-
-int main()
-{
-   struct X x;
-   init(x); //calls your init
-}
-
-```
-Calling the default init
-
-```cpp
-
-int init(struct X* p)
-{
-  //... your code
-  default init(x); //calls the default init
-}
-```
 ## Operator destroy
 
 ```cpp
@@ -85,12 +42,11 @@ struct Person
 };
 
 //overriding destroy
-void destroy(struct X* p)
+void operator destroy(struct X* p)
 {
   free(p->name);
   
-  //Just like init, destroy is defined for all types
-  //we can call the default version of destroy
+  //calling the  default destroy  
   default destroy(p); 
 }
 
@@ -103,7 +59,7 @@ int main()
 ```
 ## Calling destroy at the end of scope
 
-Destroy is not called automatically.
+Destroy is not called automatically at the end of scope unless you put 'auto'.
 
 ```cpp
 
@@ -113,7 +69,7 @@ struct Person
 };
 
 //overriding destroy
-void destroy(struct X* p)
+void operator destroy(struct X* p)
 {
   free(p->name);
   
@@ -130,6 +86,135 @@ int main()
 } //destroy(x) is called at the end of scope
 ```
 
+## Operator new
+
+```cpp
+
+struct X
+{
+    char * name = NULL;
+};
+
+int main()
+{
+  struct X* pX = new (struct X){ }; 
+  
+  //Same as:
+  //struct X* pX = malloc(sizeof  * pX);
+  //if (pX) *pX = (struct X){};
+  
+}
+
+```
+
+
+### Overriding new
+
+```cpp
+
+struct X
+{
+    char * name = NULL;
+};
+
+struct X* operator create(struct X* def)
+{
+  struct X* p = malloc(sizeof * p);
+  if (p)
+  {
+    *p = *def;
+  }
+  return p;
+}
+
+int main()
+{
+  struct X* pX = new (struct X) {};  //same of create(&(struct X){});
+}
+
+```
+
+## Operator delete
+
+```cpp
+
+struct X
+{
+    char * name = NULL;
+};
+
+int main()
+{
+  struct X* pX = new (struct X) {};
+  
+  delete pX;
+  
+  //same of
+  
+  if (pX)
+  {
+    destroy(*pX); 
+    free(pX);
+  }
+  
+}
+
+```
+
+### Overring delete
+
+```cpp
+
+struct X
+{
+    char * name = NULL;
+};
+
+void operator delete(struct X* p)
+{   
+   //...your code here
+   default delete(p);
+}
+
+```
+
+## Automatically calling delete
+
+Use the auto modifier in your pointer.
+
+```cpp
+
+struct X
+{
+    char * name = NULL;
+};
+
+int main()
+{
+  struct X* auto pX = new (struct X) {};
+   
+} //delete pX is called at the end of scope
+
+```
+
+auto in struct members
+
+```cpp
+
+struct X
+{
+    char * auto name = NULL;
+};
+
+int main()
+{
+  struct X* auto pX = new (struct X) {};
+   
+} 
+//delete pX is called at the end of scope
+//delete will call the default destroy
+//default destroy will call free in char*.
+```
 
 
 
