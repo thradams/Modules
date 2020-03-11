@@ -2,14 +2,13 @@
 
 Updated 11 march 2020
 
-When reading this document consider that the features are additions into C11 and not changes in C++.
+When reading this document consider that the features are additions into C and not changes in C++.
 
 ## Member initializer
 
 ```cpp
 
-struct X
-{
+struct X {
    int i = 1;
    struct Point pt = { .x = 1, .y = 1 };
 };
@@ -19,36 +18,37 @@ struct X
 ## Empty Initializer/Compound literal
 
 ```cpp
-int main()
-{
+int main() {
+   
+   //new syntax
    struct X x = {};    
    //same as C99
    struct X x = { . i = 1, .pt = {.x = 1, .y = 1 } };
    
-   
+   //new syntax
    x = (struct X){};    
    //same as C99
    x = (struct X){ . i = 1, .pt = {.x = 1, .y = 1 } };
 }
 
 
-int main()
-{
+int main() {
   struct X x; //same as C today (unitialized)
 }
 ```
 
 ## Operator destroy
 
-The compiler has a operator destroy that can be overrided.
+The compiler has a operator destroy (auto generated) that can be overrided.
+
 
 ```cpp
 struct Person {
     char * name = NULL;
 };
 
-//overriding destroy
-void operator destroy(struct X x)
+//overriding destroy for a variable of type struct X
+void operator destroy(struct X auto x)
 {
   free(x->name);
 }
@@ -61,9 +61,20 @@ int main()
 }
 ```
 
+## Calling the default implementation of destroy
+
+```cpp
+
+void operator destroy(struct X auto x) {
+  free(x->name);
+  default destroy(x);  //avoids infinite recursion
+}
+
+```
+
 ## Calling destroy at the end of scope
 
-Destroy is not called automatically at the end of scope unless you put 'auto'.
+Destroy is not called automatically at the end of scope unless you qualify your variable as 'auto'.
 
 ```cpp
 
@@ -90,7 +101,9 @@ struct X {
 
 int main()
 {
-  struct X* auto pX = new (struct X) {};  
+  struct X* auto pX = malloc(sizeof * pX);
+  if (pX) *pX = (struct X){};
+  
 } //destroy(pX)
 
 ```
@@ -105,7 +118,7 @@ The compiler has a default implementation for any auto pointer that is equivalen
  }
 ```
 
-You can override destroy for auto pointers
+You can override destroy for some auto pointer type
 
 ```cpp
 void operator destroy(struct X * auto p)
