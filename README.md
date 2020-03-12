@@ -344,7 +344,7 @@ Sample:
  
 struct Box
 {
-    int id = 1; //discriminant
+    const int id = 1; //discriminant
 };
 
 void operator draw(struct Box* pBox) {
@@ -352,7 +352,7 @@ void operator draw(struct Box* pBox) {
 }
 
 struct Circle {
-    int id = 2; //discriminant
+    const int id = 2; //discriminant
 };
 
 void operator draw(struct Circle* pCircle) {
