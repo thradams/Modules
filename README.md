@@ -130,8 +130,11 @@ void operator destroy(struct X * auto p)
 }
 ```
 
+
 To destroy the content of a non auto pointer we can cast.
-```
+
+```cpp
+
 int main()
 {
   struct X* pX = malloc(sizeof * pX);
@@ -143,6 +146,8 @@ int main()
 ## Operator new
 
 Allocates and copy a compound literal to the allocated memory.
+
+Returns a pointer qualified with auto.
 
 ```cpp
 
