@@ -37,9 +37,79 @@ int main() {
 }
 ```
 
+### Operator new
+
+The compiler auto generates the implementation of the new operator.
+
+The default implementation is :
+
+```cpp
+struct T* operator new(struct T initValue)
+{
+  struct T* p = malloc(sizeof initValue);
+  if (p)
+  {
+    *p = initValue;
+  }
+  return p;
+}
+```
+
+The usage (syntax):
+
+```cpp
+
+struct X {
+    char * name = NULL;
+};
+
+int main() {
+  struct X* pX = new((struct X) {});
+}
+
+```
+
+We can override this operator. For instance to use a custom malloc.
+
+```cpp
+struct T* operator new(struct T initValue)
+{
+  struct T* p = malloc(sizeof * p);
+  if (p)
+  {
+    *p = initValue;
+  }
+  return p;
+}
+```
+
+Or we can overrided the operator just to intercept the call. For instance, 
+log memory leak checks etc. In this case we can call the **default new**
+
+```cpp
+struct T* operator new(struct T initValue)
+{
+  struct T* p = default new(initValue);
+  if (p)
+  {
+    //log etc..
+  }
+  return p;
+}
+```
+New operator works for arrays:
+
+```cpp
+
+int main() {
+  char * str = new((char[200]){});
+}
+```
+
 ## Operator destroy
 
-The compiler has a operator destroy (auto generated) that can be overrided.
+The compiler has an auto generated operator destroy that can be overrided
+for some especific type.
 
 
 ```cpp
@@ -48,8 +118,8 @@ struct Person {
 };
 
 //overriding destroy for a variable of type struct X auto
-void operator destroy(struct X auto x) {
-  free(x->name);
+void operator destroy(struct X x) {
+  free(x.name);
 }
 
 int main() {
@@ -60,27 +130,15 @@ int main() {
 }
 ```
 
-## Calling the default implementation of destroy
-
-```cpp
-
-void operator destroy(struct X auto x) {
-  free(x->name);
-  default destroy(x);  //avoids infinite recursion
-}
-
-```
+In the same way of new, the default destroy will call the default implementation
+that does nothing for basic types.  The useful generation of destroy is associated
+with the keyword auto that will see in the next topics.
 
 ## Calling destroy at the end of scope
 
 Destroy is not called automatically at the end of scope unless you qualify your variable as 'auto'.
 
 ```cpp
-
-struct Person {
-    char * name = NULL;
-};
-
 int main() {
    auto struct X x; 
    
@@ -90,7 +148,7 @@ int main() {
 
 ## Auto pointers
 
-Pointers can be qualified with auto. Destroy will be called at the end of scope.
+Pointers can be qualified with auto, it means that the pointer is the onwer of the pointed object.
 
 ```cpp
 
@@ -100,153 +158,90 @@ struct X {
 
 int main()
 {
-  struct X* auto pX = malloc(sizeof * pX);
-  if (pX) *pX = (struct X){};
+  struct X* auto pX = new ((struct X){});
   
-} //destroy(pX)
+} //destroy(pX) is called
 
 ```
 
-The compiler has a default implementation for any auto pointer that is equivalent of
+The compiler has a default implementation for any pointer qualified with auto that is equivalent of
 
 ```cpp
- if (p)
- {
-   destroy(p);
-   free(p);
- }
-```
-
-You can override destroy for some auto pointer type
-
-```cpp
-void operator destroy(struct X * auto p)
+void operator destroy(T * auto p)
 {
   if (p)
   {
-    free(p->name);
+    destroy(*p);
     free(p);
   }
 }
 ```
 
-
 To destroy the content of a non auto pointer we can cast.
 
 ```cpp
-
-int main()
-{
-  struct X* pX = malloc(sizeof * pX);
-  if (pX) *pX = (struct X){};
-  destroy( (struct X* auto) pX);
-} //destroy(pX)
+  struct X* pX = new ((struct X){});
+  ...
+  destroy( (struct X* auto) pX);  
 ```
 
-## Operator new
-
-Allocates and copy a compound literal to the allocated memory.
-
-Returns a pointer qualified with auto.
+Or call destroy for the content and them free.
 
 ```cpp
-
-struct X {
-    char * name = NULL;
-};
-
-int main()
-{
-  struct X* pX = new (struct X){ }; 
-  
-  //Same as:
-  
-  struct X* pX = malloc(sizeof  * pX);
-  if (pX) 
-  {
-    *pX = (struct X){};
-  }  
-}
-
+  struct X* pX = new ((struct X){});
+  ...
+  destroy(*pX);  
+  free(pX);
 ```
-
-### Overriding new
-
-In case you don't want to use malloc for instance
-
-```cpp
-
-struct X {
-    char * name = NULL;
-};
-
-struct X* operator new(struct X* def)
-{
-  struct X* p = malloc(sizeof * p);
-  if (p)
-  {
-    *p = *def;
-  }
-  return p;
-}
-
-int main() {
-  struct X* pX = new (struct X) {};
-}
-
-```
-In case you have overried new then you probably will override destroy for pointers.
 
 ## Auto in struct members
 
-The default implementation of destroy calls each destroy member recursivally.
+The default implementation of destroy calls each member recursivally.
+
+So
 
 ```cpp
 
-struct Y
-{
+struct Y {
   int i;
 };
 
 struct X
 { 
-  struct Y y;
+  auto struct Y y;
   struct Y * auto pY;
 };
 
 int main() {
   auto struct X x = {};  
 } 
-calls destroy(x)
-that will call destroy(x.y) and destroy(x.pY) that will call destroy(*pX) and free(pX)
-
-
 ````
+destroy(x) is called at the end of scope. 
+
+The default implementation will call destroy(x.y) and destroy(x.pY);
+
+> The usage of auto is so common in variables that are not pointer that
+> we can make it default. To turn off , we would need another syntax. !auto for instance or  'view'.
+
 ## if with initializer 
-Same of C++.  See the use of auto.
+Same of C++.  Togueter with auto it creates an interting pattern.
 
 ```cpp
 
-struct Y
-{
-  int i;
-};
-
-struct X
-{ 
-  struct Y y;
-  struct Y * auto pY;
-};
-
-int main()
-{
   if (struct X* auto pX = new (struct X){}, p)
   {
-  }//calls destroy(pX);
-} 
+    //pX in scope AND != NULL
+    ..
+  }
+  //pX not in scope
 
 ````
+
 ## overriding destroy for existing types
+
+typedefs are only alias in C. But for the operators they are considered.
+For instance, let's say FILE is a typedef for int. We can override
+the operator and that doen't means that any int will call this function.
 
 ```cpp
 
@@ -259,11 +254,12 @@ int main()
 {
   if (FILE* auto f = fopen("file.txt", "r"), f)
   {
-  }//calls custon destroy(f) that calls fclose;
+  }
 } 
 
 ````
-# Operator move
+# Operator move (source)
+Copies source to dest and clear source.
 
 ```cpp
  struct X * auto pX1 = new (struct X){};
@@ -278,7 +274,7 @@ int main()
 ```
 # Operator swap (a, b)
 
-Same as
+Copy a to b and b to a.
 
 ```cpp
   
@@ -296,8 +292,12 @@ Lambdas with capture (to be defined)
 
 ## Custom operator
 
-We can create other operators they are like funcions that can be overrided. But they have
-internal linkage only. 
+We can create other operators that basically are functions that can be overriden.
+They are not normal functions because they have name mangling (like c++) or internal
+linkage (like static inline functions)
+
+They are useful do  create some operation that is applied for many types with the same 
+meaning.
 
 ```cpp
 
@@ -327,24 +327,21 @@ int main()
 }
 
 ```
+This can be used in math operations for instance.
 
 
 ## Polimorphism
 
-Pointers that can point to a set of types. Types must have a common discriminant
+Pointers that can point to a especific set of types.
+
+If you set of types have a common discriminant we also can select the
+appropriated operator in runtime according with the type.
 
 Sample:
 ```cpp
- 
- //forward declaration
- struct <struct Box | struct Circle> Shape;  
- 
-  //pShape points to box or circle
- struct Shape* pShape;
-```
 
-```cpp
 
+ 
 struct Box
 {
     int id = 1; //discriminant
@@ -372,9 +369,10 @@ int main()
   for (int i = 0; i < 2; i++)
   {    
     //runtime selecion according with the discriminant
-    draw(shapes[i]); //draw bust be an operator in box and circle othewise compile time error
+    draw(shapes[i]); 
+    //draw must be an operator in box and circle othewise error
     
-    //id is the only data member
+    //when types have a common discriminant it is available
     printf("%d", shapes[i].id);
   }
   
