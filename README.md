@@ -1,4 +1,4 @@
-# The language between C and C++ I would like
+# The language between C and C++ I would like to have
 
 Updated 12 march 2020
 
