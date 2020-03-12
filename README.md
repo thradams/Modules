@@ -64,7 +64,7 @@ struct X {
 };
 
 int main() {
-  struct X* pX = new((struct X) {});
+  struct X* pX = new (struct X) {};
 }
 
 ```
@@ -158,7 +158,7 @@ struct X {
 
 int main()
 {
-  struct X* auto pX = new ((struct X){});
+  struct X* auto pX = new (struct X){};
   
 } //destroy(pX) is called
 
@@ -180,7 +180,7 @@ void operator destroy(T * auto p)
 To destroy the content of a non auto pointer we can cast.
 
 ```cpp
-  struct X* pX = new ((struct X){});
+  struct X* pX = new (struct X){};
   ...
   destroy( (struct X* auto) pX);  
 ```
@@ -188,7 +188,7 @@ To destroy the content of a non auto pointer we can cast.
 Or call destroy for the content and them free.
 
 ```cpp
-  struct X* pX = new ((struct X){});
+  struct X* pX = new (struct X){};
   ...
   destroy(*pX);  
   free(pX);
