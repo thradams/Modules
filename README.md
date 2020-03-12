@@ -329,6 +329,9 @@ int main()
 ```
 This can be used in math operations for instance.
 
+## Generic Operators
+
+Considered.
 
 ## Polimorphism
 
