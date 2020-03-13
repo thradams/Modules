@@ -383,6 +383,35 @@ int main()
 
 ```
 
+## Resizable arrays
+
+```cpp
+
+ void operator push(auto a[auto], auto item)
+ {
+    if (a.size + 1 > a.capacity)
+    {
+        int n = a.capacity * 2;
+        if (n == 0)
+        {
+            n = 1;
+        }
+        decltype(a.data[0]) * pnew = a.data;
+        pnew = realloc(pnew, n * sizeof(a[0]));
+        if (pnew)
+        {
+            pItems->data = pnew;
+            pItems->capacity = n;
+        }
+    }
+    a.data[a.size] = item;
+    a.size++;
+ }
+ 
+ int a[auto];
+ push(a, 1);
+ 
+```
 
 ## Standard build system 
 Pragma source is a way to make source files discoverable respecting platform configuration.
