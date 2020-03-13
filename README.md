@@ -408,8 +408,11 @@ int main()
     a.size++;
  }
  
- int a[auto];
+ int a[auto]; //synonym of struct some_name_mangling  { int * data; int size; int capacity;}
  push(a, 1);
+ 
+ a.data[0] = 1; //ok
+ a[0] = 1; //ok
  
 ```
 
