@@ -36,24 +36,11 @@ int main() {
   struct X x; //same as C today (unitialized)
 }
 ```
+The initialization is static. (!= from C++)
 
 ### Operator new
 
 The compiler auto generates the implementation of the new operator.
-
-The default implementation is :
-
-```cpp
-struct T* operator new(struct T initValue)
-{
-  struct T* p = malloc(sizeof initValue);
-  if (p)
-  {
-    *p = initValue;
-  }
-  return p;
-}
-```
 
 The usage (syntax):
 
@@ -69,7 +56,30 @@ int main() {
 
 ```
 
-We can override this operator. For instance to use a custom malloc.
+The default implementation is :
+
+```cpp
+struct T* operator new(struct T initValue)
+{
+  struct T* p = malloc(sizeof initValue);
+  if (p)
+  {
+    *p = initValue;
+  }
+  return p;
+}
+```
+
+It does not throw. There is no runtime (appart of malloc) error.
+
+
+We can override this operator. For instance to use a custom malloc or just
+to intercept the call and do some other operation.
+The default implementation can be explicitly called usind
+
+```cpp
+struct T* p = default new(initValue);
+```
 
 ```cpp
 struct T* operator new(struct T initValue)
@@ -83,21 +93,7 @@ struct T* operator new(struct T initValue)
 }
 ```
 
-Or we can overrided the operator just to intercept the call. For instance, 
-log memory leak checks etc. In this case we can call the **default new**
-
-```cpp
-struct T* operator new(struct T initValue)
-{
-  struct T* p = default new(initValue);
-  if (p)
-  {
-    //log etc..
-  }
-  return p;
-}
-```
-New operator works for arrays:
+New operator works for arrays: (Any compound literal)
 
 ```cpp
 
@@ -220,8 +216,6 @@ destroy(x) is called at the end of scope.
 
 The default implementation will call destroy(x.y) and destroy(x.pY);
 
-> The usage of auto is so common in variables that are not pointer that
-> we can make it default. To turn off , we would need another syntax. !auto for instance or  'view'.
 
 ## if with initializer 
 Same of C++.  Togueter with auto it creates an interting pattern.
