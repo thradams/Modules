@@ -322,6 +322,7 @@ int main()
 
 ```
 This can be used in math operations for instance.
+operators are diferent from functions. the parameters are like references.
 
 ## Generic Operators
 
