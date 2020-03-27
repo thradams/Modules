@@ -380,6 +380,43 @@ int main()
 
 ## Resizable arrays
 
+Syntax
+```cpp
+int a[auto];
+```
+this is the same of:
+
+```cpp
+struct some_name { int size; int capacity; int* data;};
+struct some_name a;
+```
+
+Always passed by pointer:
+
+```cpp
+void F(int a[auto]);
+```
+same as:
+
+```cpp
+struct some_name { int size; int capacity; int* data;};
+void F(struct some_name* a);
+```
+
+```cpp
+caller:
+int a[auto];
+F(a);
+```
+Same as:
+
+```cpp
+struct some_name { int size; int capacity; int* data;};
+struct some_name a;
+F(&a);
+```
+
+
 ```cpp
 
  void operator push(auto a[auto], auto item)
