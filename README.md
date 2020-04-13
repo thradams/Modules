@@ -56,10 +56,10 @@ int main() {
 
 ```
 
-The default implementation is :
+The default implementation is equivalent of: (except for arrays becase arrays are passed  by pointers in C)
 
 ```cpp
-struct T* operator new(struct T initValue)
+struct T* new(struct T initValue)
 {
   struct T* p = malloc(sizeof initValue);
   if (p)
@@ -72,10 +72,7 @@ struct T* operator new(struct T initValue)
 
 It does not throw. There is no runtime (appart of malloc) error.
 
-
-We can override this operator. For instance to use a custom malloc or just
-to intercept the call and do some other operation.
-The default implementation can be explicitly called usind
+We can override this operator for an especific type.
 
 ```cpp
 struct T* p = default new(initValue);
