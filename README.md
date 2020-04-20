@@ -40,7 +40,8 @@ The initialization is static. (!= from C++)
 
 ### Operator new
 
-The compiler auto generates the implementation of the new operator.
+The compiler has a **default operator new** that can initialize objects into heap 
+using malloc.
 
 The usage (syntax):
 
@@ -51,37 +52,19 @@ struct X {
 };
 
 int main() {
-  struct X* pX = new (struct X) {};
+  struct X * pX = new (struct X) {};
 }
 
 ```
 
-The default implementation is equivalent of: (except for arrays becase arrays are passed  by pointers in C)
+It does not throw. It returns null if malloc fails.
 
-```cpp
-struct T* new(struct T initValue)
-{
-  struct T* p = malloc(sizeof initValue);
-  if (p)
-  {
-    *p = initValue;
-  }
-  return p;
-}
-```
-
-It does not throw. There is no runtime (appart of malloc) error.
-
-We can override this operator for an especific type.
-
-```cpp
-struct T* p = default new(initValue);
-```
+We can  override this operator.
 
 ```cpp
 struct T* operator new(struct T initValue)
 {
-  struct T* p = malloc(sizeof * p);
+  struct T* p = malloc(sizeof T);
   if (p)
   {
     *p = initValue;
@@ -90,14 +73,17 @@ struct T* operator new(struct T initValue)
 }
 ```
 
-New operator works for arrays: (Any compound literal)
+New operator does not works for arrays
 
 ```cpp
 
 int main() {
-  char * str = new((char[200]){});
+  char * str = new((char[200]){}); //ERROR
 }
 ```
+
+> Arrays still an option.
+
 
 ## Operator destroy
 
@@ -124,8 +110,9 @@ int main() {
 ```
 
 In the same way of new, the default destroy will call the default implementation
-that does nothing for basic types.  The useful generation of destroy is associated
-with the keyword auto that will see in the next topics.
+that does nothing for basic types.
+
+The useful generation of destroy is associated with the keyword auto that will see in the next topics.
 
 ## Calling destroy at the end of scope
 
@@ -151,24 +138,12 @@ struct X {
 
 int main()
 {
-  struct X* auto pX = new (struct X){};
+  auto struct X* auto pX = new (struct X){};
   
 } //destroy(pX) is called
 
 ```
-
-The compiler has a default implementation for any pointer qualified with auto that is equivalent of
-
-```cpp
-void operator destroy(T * auto p)
-{
-  if (p)
-  {
-    destroy(*p);
-    free(p);
-  }
-}
-```
+The default implementation for auto pointers is check is the pointer is not null and them call the destructor of the pointed object.
 
 To destroy the content of a non auto pointer we can cast.
 
@@ -202,7 +177,7 @@ struct Y {
 struct X
 { 
   auto struct Y y;
-  struct Y * auto pY;
+  auto struct Y * auto pY;
 };
 
 int main() {
@@ -215,7 +190,8 @@ The default implementation will call destroy(x.y) and destroy(x.pY);
 
 
 ## if with initializer 
-Same of C++.  Togueter with auto it creates an interting pattern.
+
+Same of C++.  Together with auto it creates an interesting pattern.
 
 ```cpp
 
@@ -228,7 +204,7 @@ Same of C++.  Togueter with auto it creates an interting pattern.
 
 ````
 
-## overriding destroy for existing types
+## Overriding destroy for existing types
 
 typedefs are only alias in C. But for the operators they are considered.
 For instance, let's say FILE is a typedef for int. We can override
@@ -250,6 +226,7 @@ int main()
 
 ````
 # Operator move (source)
+
 Copies source to dest and clear source.
 
 ```cpp
@@ -279,7 +256,7 @@ Copy a to b and b to a.
 Similar of C++.
 
 Lambdas without capture will be function pointers.
-Lambdas with capture (to be defined)
+> Lambdas with capture (to be defined)
 
 ## Custom operator
 
